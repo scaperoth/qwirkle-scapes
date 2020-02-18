@@ -4,7 +4,7 @@ import { QwirkleList } from '../../components';
 import './Home.scss';
 
 const Home = () => (
-  <div>
+  <div id="home-page">
     <QwirkleList />
   </div>
 );

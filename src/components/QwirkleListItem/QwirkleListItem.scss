@@ -1,0 +1,46 @@
+.qwirkle-list-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+  min-width: 300px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  position: relative;
+  margin-bottom: 10px;
+
+  &-row {
+    margin-bottom: 10px;
+  }
+
+  &-meta {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &-score {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &-delete {
+    position: absolute;
+    width: 100%;
+    top: -5px;
+    left: 5px;
+    text-align: right;
+    button {
+      border-radius: 20px;
+      transition: 0.5s all;
+      &:hover {
+        background-color: #f54242;
+        color: white;
+        cursor: pointer;
+      }
+    }
+  }
+}

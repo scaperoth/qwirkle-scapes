@@ -1,5 +1,8 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import QwirkleListItem from '../QwirkleListItem/QwirkleListItem';
+
+import './QwirkleList.scss';
 
 const QwirkleList = ({ maxPlayers }) => {
   const [players, setPlayers] = useState([]);
@@ -13,6 +16,11 @@ const QwirkleList = ({ maxPlayers }) => {
         const newPlayer = { ...player, roundScore: 0 };
         if (player.playerPosition === playerPosition) {
           newPlayer.totalScore = player.totalScore + cleanedRoundScore;
+          if (newPlayer.totalScore > 200) {
+            newPlayer.totalScore = 200;
+          } else if (newPlayer.totalScore < 0) {
+            newPlayer.totalScore = 0;
+          }
         }
         return newPlayer;
       }),
@@ -20,15 +28,20 @@ const QwirkleList = ({ maxPlayers }) => {
   };
 
   const setPlayerRoundScore = (playerPosition, score) => {
+    const roundScore = parseInt(score, 10);
     setPlayers(
       players.map(player =>
-        player.playerPosition === playerPosition ? { ...player, roundScore: score } : player,
+        player.playerPosition === playerPosition ? { ...player, roundScore } : player,
       ),
     );
   };
 
   const removePlayer = playerPosition => {
     const newPlayers = players.filter(player => player.playerPosition !== playerPosition);
+    newPlayers.map((p, newPosition) => {
+      newPlayers[newPosition].playerPosition = newPosition;
+      return p;
+    });
     setPlayers(newPlayers);
   };
 
@@ -52,32 +65,23 @@ const QwirkleList = ({ maxPlayers }) => {
   };
 
   return (
-    <div className="player-list">
+    <div className="qwirkle-list">
       <ul>
         {players &&
           players.map(player => (
-            <li key={player.playerPosition}>
-              <div>{player.name}</div>
-              <div>{player.totalScore}</div>
-              <input
-                type="number"
-                name="quantity"
-                min="0"
-                max="200"
-                value={player.roundScore}
-                onChange={({ target }) => setPlayerRoundScore(player.playerPosition, target.value)}
-              />
-              <button onClick={() => endPlayerTurn(player.playerPosition, player.roundScore)}>
-                Save Score
-              </button>
-              <button onClick={() => removePlayer(player.playerPosition)}>X</button>
-            </li>
+            <QwirkleListItem
+              key={player.playerPosition}
+              player={player}
+              endPlayerTurn={endPlayerTurn}
+              removePlayer={removePlayer}
+              setPlayerRoundScore={setPlayerRoundScore}
+            />
           ))}
       </ul>
       {players.length < maxPlayers && (
         <form className="new-player">
           <input ref={nameInputRef} type="text" />
-          <button onClick={onAddButtonClick}>Add</button>
+          <button onClick={onAddButtonClick}>Add New Player</button>
         </form>
       )}
     </div>
